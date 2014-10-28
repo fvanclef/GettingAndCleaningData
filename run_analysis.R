@@ -29,7 +29,9 @@ get_and_reshape_data_set <- function(data_set) {
   
   activity_file <- sprintf("./UCI HAR Dataset/%s/y_%s.txt",data_set,data_set)
   activities <- read.table(activity_file,header= FALSE,strip.white = TRUE, col.names = c('Id') )
+  activities <- cbind(activities, id... = c(1:dim(activities)[1]))
   activities <- merge(activities,activity_labels,sort = FALSE)
+  activities <- activities[order(activities$id...),]
   
   subject_file <- sprintf("./UCI HAR Dataset/%s/subject_%s.txt",data_set,data_set)
   subjects <- read.table(subject_file,header= FALSE,strip.white = TRUE, col.names = c('Subject') )
@@ -37,7 +39,7 @@ get_and_reshape_data_set <- function(data_set) {
   file_name <- sprintf("./UCI HAR Dataset/%s/X_%s.txt",data_set,data_set)
   data_table <- data.table(read.table(file_name,header= FALSE,strip.white = TRUE, col.names = features ))
   data_table <- data_table[,feature_indexes, with = FALSE]
-  data_table[, activity := activities[,2]]
+  data_table[, activity := activities[,3]]
   data_table[, subject := subjects]
   
 }
